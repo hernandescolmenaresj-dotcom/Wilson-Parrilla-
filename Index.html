@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wilson Parrilla</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(180deg, #1a1410 0%, #231913 40%, #120f0c 100%);
+      color: white;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(184,134,11,0.08), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255,120,0,0.06), transparent 30%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: url("https://i.ibb.co/sv4TRLHk/carne-parrilla-brochetas-sobre-parrilla-brasas-lenguas-fuego-ai-676084-151.avif") center/cover no-repeat;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 70%, rgba(255,120,0,0.25), transparent 60%),
+        radial-gradient(circle at 70% 80%, rgba(255,80,0,0.2), transparent 60%),
+        rgba(0,0,0,0.5);
+      animation: fuego 6s linear infinite;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+    }
+
+    @keyframes fuego {
+      0%   { transform: rotate(0deg) scale(1); }
+      50%  { transform: rotate(180deg) scale(1.2); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .titulo-animado {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: white;
+      text-shadow:
+        0 0 10px rgba(255,140,0,0.5),
+        0 0 20px rgba(184,134,11,0.4);
+    }
+
+    .hero p {
+      margin-top: 10px;
+      color: #ddd;
+      font-size: 1.1rem;
+    }
+
+    /* FILTROS */
+    .filtros {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 15px 20px;
+    }
+
+    .filtro {
+      background: #1f1f1f;
+      border: 1px solid #333;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .filtro:hover { background: #B8860B; color: black; }
+    .filtro.activo { background: #B8860B; color: black; font-weight: bold; }
+
+    /* LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    @media(max-width:900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* PRODUCTOS */
+    .productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 15px;
+    }
+
+    .producto {
+      background: rgba(36,28,22,0.92);
+      backdrop-filter: blur(8px);
+      padding: 15px;
+      border-radius: 18px;
+      text-align: center;
+      border: 1px solid rgba(184,134,11,0.15);
+      transition: all 0.25s ease;
+    }
+
+    .producto:hover {
+      transform: translateY(-5px);
+      border-color: #B8860B;
+      box-shadow: 0 10px 25px rgba(184,134,11,0.15);
+    }
+
+    .producto img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .producto h3 {
+      font-size: 1rem;
+      margin: 10px 0 5px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .producto p {
+      color: #B8860B;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* BOTONES */
+    button {
+      background: #B8860B;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: 'DM Sans', sans-serif;
+      width: 100%;
+      color: white;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    button:hover { transform: scale(1.05); opacity: 0.9; }
+
+    /* CARRITO */
+    .carrito {
+      background: rgba(25,18,14,0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 16px;
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      border: 1px solid #3a2b22;
+    }
+
+    .carrito h2 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 15px;
+    }
+
+    #lista-carrito {
+      list-style: none;
+      padding: 0;
+    }
+
+    #lista-carrito li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #262626;
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      gap: 6px;
+    }
+
+    #lista-carrito button {
+      width: auto;
+      padding: 5px 8px;
+      font-size: 12px;
+    }
+
+    .carrito .vaciar {
+      background: #444;
+      margin-bottom: 8px;
+    }
+
+    /* BENEFICIOS */
+    .beneficios-section { padding: 20px; }
+    .beneficios-section h2 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 15px;
+    }
+
+    .beneficios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+      gap: 10px;
+    }
+
+    .beneficios-grid div {
+      background: rgba(36,28,22,0.8);
+      border: 1px solid rgba(184,134,11,0.2);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    /* SECCIONES */
+    section h2 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 15px;
+    }
+
+    .recomendados-section,
+    .ranking-elo,
+    .duelo-section {
+      padding: 20px;
+    }
+
+    /* TOP ELO */
+    #top-elo {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 10px;
+    }
+
+    #top-elo::-webkit-scrollbar { height: 6px; }
+    #top-elo::-webkit-scrollbar-thumb { background: #B8860B; border-radius: 10px; }
+
+    .top-card {
+      min-width: 180px;
+      background: #1f1f1f;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #333;
+      transition: transform 0.2s;
+    }
+
+    .top-card:hover { transform: scale(1.05); }
+
+    .top-card img { width: 100%; height: 140px; object-fit: cover; }
+
+    .top-info { padding: 10px; }
+
+    .posicion {
+      background: #B8860B;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      display: inline-block;
+      margin-bottom: 5px;
+    }
+
+    .top-info h3 { font-size: 0.9rem; margin: 5px 0; }
+    .top-info p { color: #B8860B; font-weight: bold; }
+    .top-info small { color: #ccc; }
+
+    /* DUELO */
+    #duelo-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .duelo-opcion {
+      flex: 1;
+      min-width: 150px;
+      background: rgba(36,28,22,0.92);
+      border: 1px solid rgba(184,134,11,0.3);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .duelo-opcion:hover {
+      border-color: #B8860B;
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(184,134,11,0.2);
+    }
+
+    .duelo-opcion img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+    }
+
+    .duelo-opcion p {
+      padding: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* RECOMENDADOS */
+    #recomendados {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 15px;
+    }
+
+    /* WHATSAPP */
+    .whatsapp-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #25D366;
+      color: white;
+      font-size: 24px;
+      padding: 15px;
+      border-radius: 50%;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .whatsapp-btn:hover { transform: scale(1.1); }
+
+    .whatsapp-btn img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-contenido {
+      background: #1f1f1f;
+      margin: 5% auto;
+      padding: 25px;
+      width: 90%;
+      max-width: 420px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: aparecer 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid #333;
+    }
+
+    .modal-contenido h2 {
+      font-family: 'Playfair Display', serif;
+    }
+
+    @keyframes aparecer {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .modal-contenido input,
+    .modal-contenido select,
+    .modal-contenido textarea {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+
+    .modal-contenido input:focus,
+    .modal-contenido select:focus,
+    .modal-contenido textarea:focus {
+      border: 1px solid #B8860B;
+    }
+
+    .modal-contenido select option { background: #2a2a2a; }
+
+    .modal-botones {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .modal-botones button { flex: 1; }
+    .modal-botones button:last-child { background: #444; }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <h1 class="titulo-animado">Wilson Parrilla</h1>
+    <p>Las mejores carnes a la parrilla 🔥</p>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="filtros">
+  <button class="filtro activo" onclick="filtrar('todos', this)">Todo</button>
+  <button class="filtro" onclick="filtrar('Carnes', this)">Carnes</button>
+  <button class="filtro" onclick="filtrar('Hamburguesas', this)">Hamburguesas</button>
+  <button class="filtro" onclick="filtrar('Entradas', this)">Entradas</button>
+  <button class="filtro" onclick="filtrar('Bebidas', this)">Bebidas</button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<main class="layout">
+  <section id="productos" class="productos"></section>
+  <aside class="carrito">
+    <h2>🛒 Carrito</h2>
+    <p>Productos: <span id="cantidad-carrito">0</span></p>
+    <ul id="lista-carrito"></ul>
+    <p style="margin: 10px 0;"><strong>Total:</strong> <span id="total">$0</span></p>
+    <button class="vaciar" onclick="vaciarCarrito()">Vaciar</button>
+    <button class="finalizar" onclick="finalizarCompra()">Pagar</button>
+  </aside>
+</main>
+
+<!-- BENEFICIOS -->
+<section class="beneficios-section">
+  <h2>✨ ¿Por qué comprar aquí?</h2>
+  <div class="beneficios-grid">
+    <div>🥩 Carne a tu gusto</div>
+    <div>👨‍👩‍👧 Ambiente familiar</div>
+    <div>🚗 Parqueadero</div>
+    <div>⚡ Servicio rápido</div>
+  </div>
+</section>
+
+<!-- RECOMENDADOS -->
+<section class="recomendados-section">
+  <h2>🌟 Recomendados</h2>
+  <div id="recomendados"></div>
+</section>
+
+<!-- TOP ELO -->
+<section class="ranking-elo">
+  <h2>🔥 Top de la tienda</h2>
+  <div id="top-elo"></div>
+</section>
+
+<!-- DUELO -->
+<section class="duelo-section">
+  <h2>⚔️ Duelo</h2>
+  <div id="duelo-container"></div>
+</section>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/573112784573?text=Hola%20quiero%20hacer%20un%20pedido%20en%20Wilson%20Parrilla"
+   class="whatsapp-btn" target="_blank">
+  <img src="https://cdn-icons-png.flaticon.com/512/220/220236.png" alt="WhatsApp" width="32">
+</a>
+
+<!-- MODAL PAGO -->
+<div id="modal-pago" class="modal">
+  <div class="modal-contenido">
+    <h2>🛒 Finalizar Pedido</h2>
+    <input type="text" id="nombre" placeholder="👤 Nombre completo">
+    <select id="tipo-entrega" onchange="toggleDireccion()">
+      <option value="">📦 Tipo de pedido</option>
+      <option value="Restaurante">🍽️ Comer en el restaurante</option>
+      <option value="Para llevar">🛍️ Para llevar</option>
+      <option value="Domicilio">🚚 Domicilio</option>
+    </select>
+    <input type="text" id="direccion" placeholder="📍 Dirección" style="display:none;">
+    <input type="text" id="barrio" placeholder="🏘️ Barrio" style="display:none;">
+    <select id="metodo-pago" onchange="toggleCambio()">
+      <option value="">💳 Método de pago</option>
+      <option value="Nequi">💜 Nequi</option>
+      <option value="Daviplata">🔴 Daviplata</option>
+      <option value="Brev-e">🟢 Brev-e</option>
+      <option value="Efectivo">💵 Efectivo</option>
+      <option value="Tarjeta">💳 Tarjeta Débito/Crédito</option>
+    </select>
+    <input type="text" id="cambio" placeholder="💰 ¿Con cuánto pagas?" style="display:none;">
+    <textarea id="notas" placeholder="📝 Notas (opcional)" rows="3"></textarea>
+    <div class="modal-botones">
+      <button onclick="enviarPedido()">Confirmar</button>
+      <button onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const productos = [
+  { id: 1,  nombre: "Punta de Anca [400GR]",           precio: 49000, categoria: "Carnes",       img: "https://i.ibb.co/pjrb63yB/Punta-de-Anca-Cortar.jpg" },
+  { id: 2,  nombre: "Punta de Anca Gratinada [400GR]", precio: 53000, categoria: "Carnes",       img: "https://i.ibb.co/1JqXvY1K/Punta-de-Anca-Gratinada.jpg" },
+  { id: 3,  nombre: "Churrasco [400GR]",               precio: 49000, categoria: "Carnes",       img: "https://i.ibb.co/mrKqjRd6/Churrasco.jpg" },
+  { id: 4,  nombre: "Churrasco Gratinado [400GR]",     precio: 53000, categoria: "Carnes",       img: "https://images.pexels.com/photos/28893432/pexels-photo-28893432.jpeg" },
+  { id: 5,  nombre: "Costillas de Cerdo [500GR]",      precio: 45000, categoria: "Carnes",       img: "https://i.ibb.co/HfxQczkC/Costillas.jpg" },
+  { id: 6,  nombre: "Mixto de Churrasco y Costilla",   precio: 43000, categoria: "Carnes",       img: "https://i.ibb.co/zhjVxq4M/Mixto-de-churrasco-y-costilla-Cortar.jpg" },
+  { id: 7,  nombre: "Mixto de Churrasco y Pollo",      precio: 42000, categoria: "Carnes",       img: "https://i.ibb.co/WWMd91DL/Mixto-Churrasco-y-Pollo.jpg" },
+  { id: 8,  nombre: "Pollo Parrilla",                  precio: 40000, categoria: "Carnes",       img: "https://i.ibb.co/GwcwCwq/Pollo-Parrilla.jpg" },
+  { id: 9,  nombre: "Pechuga",                         precio: 36000, categoria: "Carnes",       img: "https://i.ibb.co/8nnQwJrJ/Pechuga.jpg" },
+  { id: 10, nombre: "Hamburguesa Sencilla",             precio: 21000, categoria: "Hamburguesas", img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/burger-with-melted-cheese-m-Y1i3jpYYJZYfOEfX5dX.webp" },
+  { id: 11, nombre: "Hamburguesa con Tocineta",         precio: 25000, categoria: "Hamburguesas", img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/bacon-cheeseburger-close-up-JViw5wSKrR5ni7HQhAo2-.webp" },
+  { id: 12, nombre: "Hamburguesa de Pollo",             precio: 24000, categoria: "Hamburguesas", img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/best-burger-in-town-VvlV4Qcxgp2DzxSgurkpY.webp" },
+  { id: 13, nombre: "Hamburguesa Doble Carne",          precio: 28000, categoria: "Hamburguesas", img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/double-cheeseburger-aUYNga6saSMW-3oV-13-Y.webp" },
+  { id: 14, nombre: "Hamburguesa con Champiñones",      precio: 30000, categoria: "Hamburguesas", img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/portobello-mushroom-burger-9w-Yo_VXw_X1VWR80Ke_G.webp" },
+  { id: 15, nombre: "Porción de Arepa",                 precio: 7000,  categoria: "Entradas",     img: "https://images.pexels.com/photos/7442463/pexels-photo-7442463.jpeg" },
+  { id: 16, nombre: "Chorizo",                          precio: 14000, categoria: "Entradas",     img: "https://i.ibb.co/kskPnv8K/Chorizos-Borrar-objeto.jpg" },
+  { id: 17, nombre: "Porción de Francesa",              precio: 9000,  categoria: "Entradas",     img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/french-fries-Zd0V7U-IJ6JVmypYouZ3y.webp" },
+  { id: 18, nombre: "Gaseosa",                          precio: 5000,  categoria: "Bebidas",      img: "https://images.unsplash.com/photo-1581636625402-29b2a704ef13" },
+  { id: 19, nombre: "Jugo Hit",                         precio: 5000,  categoria: "Bebidas",      img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/orange-juice-splash-gkBIZ2dRSfiCgQTjCwTLQ.webp" },
+  { id: 20, nombre: "Botella de Agua",                  precio: 5000,  categoria: "Bebidas",      img: "https://images.unsplash.com/photo-1523362628745-0c100150b504" },
+  { id: 21, nombre: "Botella de Agua con Gas",          precio: 6000,  categoria: "Bebidas",      img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/uploads/webp/captivating-splash-of-water-in-a-glass-za6sLIJYbicDYLGt-xzvj.webp" },
+  { id: 22, nombre: "Cola y Pola",                      precio: 6000,  categoria: "Bebidas",      img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/beer-macro-ABUf3B-ZB2luUlDOm7b8d.webp" },
+  { id: 23, nombre: "Cerveza Poker",                    precio: 6000,  categoria: "Bebidas",      img: "https://pub-aaa82e9851064d22b954c3ebbafc9ae6.r2.dev/legacy/webp/glass-of-cold-beer-OvRA1aXNpU1IILORYW_Wa.webp" },
+  { id: 24, nombre: "Cerveza Aguila",                   precio: 6000,  categoria: "Bebidas",      img: "https://images.unsplash.com/photo-1608270586620-248524c67de9" },
+  { id: 25, nombre: "Cerveza Club Colombia",            precio: 8000,  categoria: "Bebidas",      img: "https://images.unsplash.com/photo-1608270586620-248524c67de9" },
+  { id: 26, nombre: "Cerveza Corona",                   precio: 10000, categoria: "Bebidas",      img: "https://images.pexels.com/photos/1552630/pexels-photo-1552630.jpeg" },
+  { id: 27, nombre: "Cerveza Corona Michelada",         precio: 12000, categoria: "Bebidas",      img: "https://images.unsplash.com/photo-1608270586620-248524c67de9" }
+];
+
+let carrito = new Map();
+let ratings = {};
+
+function precioCOP(valor) {
+  return new Intl.NumberFormat("es-CO", {
+    style: "currency", currency: "COP", minimumFractionDigits: 0
+  }).format(valor);
+}
+
+function renderProductos(lista = productos) {
+  const contenedor = document.getElementById("productos");
+  contenedor.innerHTML = "";
+  lista.forEach(p => {
+    contenedor.innerHTML += `
+      <div class="producto">
+        <img src="${p.img}" alt="${p.nombre}" loading="lazy">
+        <h3>${p.nombre}</h3>
+        <p>${precioCOP(p.precio)}</p>
+        <button onclick="agregar(${p.id})">Agregar</button>
+      </div>`;
+  });
+}
+
+function agregar(id) {
+  const prod = productos.find(p => p.id === id);
+  if (carrito.has(id)) carrito.get(id).cantidad++;
+  else carrito.set(id, { ...prod, cantidad: 1 });
+  actualizarCarrito();
+}
+
+function actualizarCarrito() {
+  const lista    = document.getElementById("lista-carrito");
+  const total    = document.getElementById("total");
+  const cantidad = document.getElementById("cantidad-carrito");
+  lista.innerHTML = "";
+  let suma = 0, cant = 0;
+  carrito.forEach(p => {
+    suma += p.precio * p.cantidad;
+    cant += p.cantidad;
+    lista.innerHTML += `
+      <li>
+        <span>${p.nombre} x${p.cantidad}</span>
+        <span>
+          <button onclick="cambiar(${p.id}, -1)">-</button>
+          <button onclick="cambiar(${p.id},  1)">+</button>
+        </span>
+      </li>`;
+  });
+  total.textContent    = precioCOP(suma);
+  cantidad.textContent = cant;
+}
+
+function cambiar(id, val) {
+  const item = carrito.get(id);
+  item.cantidad += val;
+  if (item.cantidad <= 0) carrito.delete(id);
+  actualizarCarrito();
+}
+
+function vaciarCarrito() {
+  carrito.clear();
+  actualizarCarrito();
+}
+
+function finalizarCompra() {
+  if (carrito.size === 0) { alert("Tu carrito está vacío"); return; }
+  document.getElementById("modal-pago").style.display = "block";
+}
+
+function cerrarModal() {
+  document.getElementById("modal-pago").style.display = "none";
+}
+
+function toggleDireccion() {
+  const tipo      = document.getElementById("tipo-entrega").value;
+  const direccion = document.getElementById("direccion");
+  const barrio    = document.getElementById("barrio");
+  const show = tipo === "Domicilio" ? "block" : "none";
+  direccion.style.display = show;
+  barrio.style.display    = show;
+}
+
+function toggleCambio() {
+  const metodo = document.getElementById("metodo-pago").value;
+  document.getElementById("cambio").style.display = metodo === "Efectivo" ? "block" : "none";
+}
+
+function enviarPedido() {
+  const nombre    = document.getElementById("nombre").value;
+  const tipo      = document.getElementById("tipo-entrega").value;
+  const direccion = document.getElementById("direccion").value;
+  const barrio    = document.getElementById("barrio").value;
+  const metodo    = document.getElementById("metodo-pago").value;
+  const notas     = document.getElementById("notas").value;
+  const cambio    = document.getElementById("cambio").value;
+
+  if (!nombre || !tipo || !metodo) { alert("Por favor completa los datos obligatorios"); return; }
+  if (tipo === "Domicilio" && (!direccion || !barrio)) {
+    alert("Debes completar dirección y barrio para domicilio"); return;
+  }
+
+  let mensaje = "🛒 Pedido - Wilson Parrilla\n\n";
+  let total = 0;
+
+  carrito.forEach(item => {
+    const subtotal = item.precio * item.cantidad;
+    total += subtotal;
+    mensaje += `🍖 ${item.nombre}\nCantidad: ${item.cantidad}\nSubtotal: ${precioCOP(subtotal)}\n\n`;
+  });
+
+  mensaje += `💰 Total: ${precioCOP(total)}\n\n`;
+  mensaje += `👤 Datos del cliente\nNombre: ${nombre}\nTipo de pedido: ${tipo}\n`;
+  if (tipo === "Domicilio") {
+    mensaje += `📍 Dirección: ${direccion}\nBarrio: ${barrio}\n`;
+  }
+  mensaje += `💳 Método de pago: ${metodo}\n`;
+  if (metodo === "Efectivo") mensaje += `💰 Paga con: ${cambio || "No especificado"}\n`;
+  mensaje += `📝 Notas: ${notas || "Ninguna"}\n\n`;
+  mensaje += "📍 Enviar comprobante de pago por este medio 🙌";
+
+  window.open(`https://wa.me/573112784573?text=${encodeURIComponent(mensaje)}`, "_blank");
+  cerrarModal();
+}
+
+function filtrar(categoria, elemento) {
+  document.querySelectorAll(".filtro").forEach(b => b.classList.remove("activo"));
+  elemento.classList.add("activo");
+  renderProductos(categoria === "todos" ? productos : productos.filter(p => p.categoria === categoria));
+}
+
+// RECOMENDADOS
+function renderRecomendados() {
+  const cont = document.getElementById("recomendados");
+  cont.innerHTML = "";
+  productos.slice(0, 5).forEach(p => {
+    cont.innerHTML += `
+      <div class="producto">
+        <img src="${p.img}" alt="${p.nombre}" loading="lazy">
+        <h3>${p.nombre}</h3>
+        <p>${precioCOP(p.precio)}</p>
+        <button onclick="agregar(${p.id})">Agregar</button>
+      </div>`;
+  });
+}
+
+// ELO
+productos.forEach(p => ratings[p.id] = 1000);
+
+function actualizarElo(g, p) { ratings[g] += 10; ratings[p] -= 10; }
+
+function renderTop() {
+  const top = document.getElementById("top-elo");
+  top.innerHTML = "";
+  const orden = [...productos].sort((a,b) => ratings[b.id] - ratings[a.id]).slice(0, 10);
+  orden.forEach((p, i) => {
+    top.innerHTML += `
+      <div class="top-card">
+        <img src="${p.img}" alt="${p.nombre}" loading="lazy">
+        <div class="top-info">
+          <span class="posicion">#${i+1}</span>
+          <h3>${p.nombre}</h3>
+          <p>${precioCOP(p.precio)}</p>
+          <small>⭐ ${ratings[p.id]} pts</small>
+        </div>
+      </div>`;
+  });
+}
+
+function duelo() {
+  const cont = document.getElementById("duelo-container");
+  let a, b;
+  do {
+    a = productos[Math.floor(Math.random() * productos.length)];
+    b = productos[Math.floor(Math.random() * productos.length)];
+  } while (a.id === b.id);
+
+  cont.innerHTML = `
+    <div class="duelo-opcion" onclick="votar(${a.id},${b.id})">
+      <img src="${a.img}" alt="${a.nombre}" loading="lazy">
+      <p>${a.nombre}</p>
+    </div>
+    <div class="duelo-opcion" onclick="votar(${b.id},${a.id})">
+      <img src="${b.img}" alt="${b.nombre}" loading="lazy">
+      <p>${b.nombre}</p>
+    </div>`;
+}
+
+function votar(g, p) {
+  actualizarElo(g, p);
+  renderTop();
+  duelo();
+}
+
+// INIT
+renderProductos();
+renderRecomendados();
+renderTop();
+duelo();
+</script>
+</body>
+</html>
